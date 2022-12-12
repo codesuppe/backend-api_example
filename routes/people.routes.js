@@ -1,9 +1,12 @@
-const People = require( '../models/people.model' )
-
 
 const express = require( 'express' )
 const router = express.Router()
 
+//modellen for people-data
+const People = require( '../models/people.model' )
+
+const formData = require('express-form-data')
+router.use(formData.parse() )          //multipart formdata
 
 //GET til endpointet people
 
@@ -34,7 +37,9 @@ router.get( '/:id', async ( req, res ) => {
     try {
         let id = req.params.id
 
-        return res.status( 200 ).json( { message: 'Her er endpointet til people - GET med id: ' + id } )
+        let udvalgtPeople = await People.findById(id)
+        return res.status( 200 ).json( udvalgtPeople )
+
     } catch ( error ) {
         return res.status( 400 ).json( { message: "Der er sket en fejl" } )
     }
@@ -51,8 +56,8 @@ router.post( '/', async ( req, res ) => {
     console.log( "route people - POST" )
 
     try {
-        let people = new People( req.body )
-        await people.save();
+        let people = new People( req.body ) //opret en ny "people" ud fra daata i req body -> modellen
+        await people.save(); //gem ny data i databasen
 
         return res.status( 201 ).json( { message: 'Ny er oprettet', created: people } )
 

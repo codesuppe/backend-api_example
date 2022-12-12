@@ -16,10 +16,7 @@ const peopleSchema = new mongoose.Schema({
         index: { unique: true } //der må ikke være to med samme emaii-addresse
         
     },
-    newsLetter: {
-        type: Boolean,
-        default: false
-    }
+    
 })
 
 module.exports = mongoose.model('People', peopleSchema, 'people')

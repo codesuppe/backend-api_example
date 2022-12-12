@@ -8,11 +8,10 @@ const mongoose = require('mongoose')
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true})
 const db = mongoose.connection
 db.on('error', ( err ) => console.log( "FEJL" + err) ) 
-db.once('open', () => console.log( "Databasen kører!" ) )
+db.once('open', () => console.log( "Mongo-Databasen kører!" ) )
 
 //APP
-const formData = require('express-form-data')
-app.use(formData.parse() )          //multipart formdata
+
 app.use(express.json())             //json 
 app.use(express.urlencoded({extended: true})) //urlencoded
 
@@ -26,6 +25,12 @@ app.get('/', async(req, res) => {
 })
 
 app.use('/people', require('./routes/people.routes'))
+
+app.get( '*', async ( req, res ) => {
+    res.status(404).json( {
+        message: 'Siden findes ikke - øv'
+    })
+})
 
 
 //LISTEN TO PORT
